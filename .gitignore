@@ -1,0 +1,19 @@
+# Node
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+
+# Python
+__pycache__/
+.venv/
+venv/
+
+# Lokale modellen (nooit in git, kunnen groot zijn)
+modellen/
+*.bin
+*.gguf
+
+# Omgeving
+.env
+.env.local

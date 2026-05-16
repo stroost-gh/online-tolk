@@ -1,0 +1,405 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: "Segoe UI", system-ui, sans-serif;
+  background: #0e1133;
+  color: #eceef7;
+  overflow: hidden;
+}
+
+/* Pagina-indeling met kopbalk */
+.pagina {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.kopbalk {
+  display: flex;
+  align-items: center;
+  padding: 0.9rem 2rem;
+  background: #0a0c28;
+  border-bottom: 1px solid #2c2f63;
+}
+
+.merk {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.merk-naam {
+  font-size: 1.4rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, #3ad3df, #4b8fd6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.merk-tag {
+  font-size: 0.72rem;
+  color: #8e90b8;
+}
+
+.midden {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+/* Kaart-paneel */
+.paneel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.3rem;
+  padding: 2.6rem 3rem;
+  border-radius: 16px;
+  background: #191c46;
+  border: 1px solid #2c2f63;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+}
+
+.titel {
+  font-size: 1.9rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, #3ad3df, #4b8fd6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.ondertitel {
+  font-size: 0.95rem;
+  color: #a6a8c9;
+  margin-top: -0.6rem;
+}
+
+.hint {
+  max-width: 24rem;
+  font-size: 0.85rem;
+  color: #a6a8c9;
+  text-align: center;
+}
+
+.melding {
+  color: #a6a8c9;
+  font-size: 0.9rem;
+}
+
+.melding-fout {
+  color: #ff9b8a;
+}
+
+/* Modus- en taalkeuze */
+.moduskeuze {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.modusknop {
+  font-size: 0.95rem;
+  font-weight: 500;
+  padding: 0.6rem 1.4rem;
+  border-radius: 8px;
+  border: 1px solid #3a3d72;
+  background: transparent;
+  color: #cfd1e6;
+  cursor: pointer;
+}
+
+.modusknop.actief {
+  background: linear-gradient(90deg, #3ad3df, #4b8fd6);
+  border-color: transparent;
+  color: #08233a;
+  font-weight: 600;
+}
+
+.taalkeuze {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.taalveld {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.taalveld label {
+  font-size: 0.85rem;
+  color: #a6a8c9;
+}
+
+.taalveld select {
+  font-size: 1.05rem;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #3a3d72;
+  background: #11143a;
+  color: #eceef7;
+}
+
+/* Knoppen */
+.knop {
+  font-size: 1.05rem;
+  font-weight: 600;
+  padding: 0.8rem 2.2rem;
+  border: none;
+  border-radius: 8px;
+  background: #ef9433;
+  color: #ffffff;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    opacity 0.15s;
+}
+
+.knop:hover:not(:disabled) {
+  background: #e07f1c;
+}
+
+.knop:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.knop-secundair {
+  background: linear-gradient(90deg, #3ad3df, #4b8fd6);
+  color: #08233a;
+}
+
+.knop-secundair:hover:not(:disabled) {
+  background: linear-gradient(90deg, #34bdc8, #4181c4);
+}
+
+.knop-stop {
+  background: #cf5340;
+}
+
+.knop-stop:hover:not(:disabled) {
+  background: #b94530;
+}
+
+.knop-klein {
+  font-size: 0.85rem;
+  padding: 0.45rem 1.1rem;
+}
+
+/* Gesplitst tolkscherm */
+.scherm {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #0e1133;
+}
+
+.helft {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 3rem;
+  overflow: hidden;
+}
+
+.helft-boven {
+  border-bottom: 1px solid #2c2f63;
+}
+
+.helft-gedraaid {
+  transform: rotate(180deg);
+}
+
+.helft-kop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #6fd9e4;
+}
+
+.helft-acties {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: #a6a8c9;
+}
+
+.regels {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 0.9rem;
+}
+
+.regel {
+  font-size: 1.8rem;
+  line-height: 1.35;
+}
+
+.regel-voorlopig {
+  opacity: 0.5;
+}
+
+.spreker {
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15rem 0.55rem;
+  margin: 0 0.5rem;
+  border-radius: 999px;
+  background: rgba(58, 211, 223, 0.15);
+  color: #6fd9e4;
+}
+
+/* Transcriptscherm */
+.transcript {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.8rem 3rem;
+  overflow: hidden;
+}
+
+.transcript h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.transcript-lijst {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-right: 1rem;
+}
+
+.transcript-regel {
+  border-left: 3px solid #3ad3df;
+  padding-left: 1rem;
+}
+
+.transcript-meta {
+  font-size: 0.8rem;
+  color: #8e90b8;
+  margin-bottom: 0.3rem;
+}
+
+.transcript-regel p {
+  font-size: 1.15rem;
+  line-height: 1.4;
+}
+
+.transcript-vertaling {
+  color: #a6a8c9;
+}
+
+.transcript-acties {
+  display: flex;
+  gap: 1rem;
+}
+
+/* Overlay voor het koppelen van een tweede scherm */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(7, 9, 28, 0.92);
+}
+
+.overlay-paneel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  max-width: 460px;
+  padding: 2rem 2.5rem;
+  border-radius: 16px;
+  background: #191c46;
+  border: 1px solid #2c2f63;
+  text-align: center;
+}
+
+.overlay-paneel h2 {
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.qr {
+  width: 240px;
+  height: 240px;
+  padding: 0.5rem;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.overlay-url {
+  font-family: monospace;
+  font-size: 0.95rem;
+  color: #a6a8c9;
+  word-break: break-all;
+}
+
+.overlay-instructies {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  font-size: 1.05rem;
+}
+
+/* Koppelcode */
+.koppelcode-blok {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.koppelcode-label {
+  font-size: 0.8rem;
+  color: #8e90b8;
+}
+
+.koppelcode {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 0.3rem;
+  background: linear-gradient(90deg, #3ad3df, #4b8fd6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.code-invoer {
+  width: 12rem;
+  padding: 0.6rem;
+  font-size: 2rem;
+  letter-spacing: 0.4rem;
+  text-align: center;
+  border-radius: 8px;
+  border: 1px solid #3a3d72;
+  background: #11143a;
+  color: #eceef7;
+}
