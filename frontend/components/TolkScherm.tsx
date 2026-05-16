@@ -250,6 +250,12 @@ export default function TolkScherm() {
             {foutmelding && (
               <p className="melding melding-fout">{foutmelding}</p>
             )}
+            <div className="paneel-voet">
+              <span className="melding">Meekijken op dit apparaat?</span>
+              <a className="knop knop-secundair knop-klein" href="/scherm">
+                Tweede scherm openen
+              </a>
+            </div>
           </div>
         </main>
       </div>
