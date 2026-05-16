@@ -144,6 +144,23 @@ body {
   font-weight: 600;
 }
 
+.optie {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #cfd1e6;
+  cursor: pointer;
+  text-align: left;
+}
+
+.optie input {
+  width: 1.1rem;
+  height: 1.1rem;
+  accent-color: #3ad3df;
+  cursor: pointer;
+}
+
 .taalkeuze {
   display: flex;
   gap: 1.5rem;

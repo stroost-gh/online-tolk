@@ -50,6 +50,7 @@ export default function TolkScherm() {
   const [modus, setModus] = useState<Modus>("spreekkamer");
   const [taalA, setTaalA] = useState("nl");
   const [taalB, setTaalB] = useState("ar");
+  const [gedraaid, setGedraaid] = useState(true);
   const [verbonden, setVerbonden] = useState(false);
   const [aanHetStarten, setAanHetStarten] = useState(false);
   const [koppelOpen, setKoppelOpen] = useState(false);
@@ -197,6 +198,16 @@ export default function TolkScherm() {
                 Videocall (Jitsi)
               </button>
             </div>
+            {!videocall && (
+              <label className="optie">
+                <input
+                  type="checkbox"
+                  checked={gedraaid}
+                  onChange={(e) => setGedraaid(e.target.checked)}
+                />
+                Bovenste tekst ondersteboven tonen (voor iemand tegenover u)
+              </label>
+            )}
             <div className="taalkeuze">
               <div className="taalveld">
                 <label htmlFor="taalA">
@@ -326,7 +337,7 @@ export default function TolkScherm() {
         taal={taalB}
         ondertitels={recent}
         boven
-        gedraaid={modus === "spreekkamer"}
+        gedraaid={modus === "spreekkamer" && gedraaid}
       />
       <Helft
         taal={taalA}
@@ -334,6 +345,14 @@ export default function TolkScherm() {
         rechtsBoven={
           <span className="helft-acties">
             <span>{verbonden ? "verbonden" : "verbinding verbroken..."}</span>
+            {modus === "spreekkamer" && (
+              <button
+                className="knop knop-secundair knop-klein"
+                onClick={() => setGedraaid((g) => !g)}
+              >
+                {gedraaid ? "Gelijk richten" : "Ondersteboven"}
+              </button>
+            )}
             <button
               className="knop knop-secundair knop-klein"
               onClick={() => setKoppelOpen(true)}
