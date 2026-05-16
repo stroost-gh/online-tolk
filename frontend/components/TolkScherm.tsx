@@ -188,7 +188,7 @@ export default function TolkScherm() {
                 className={videocall ? "modusknop" : "modusknop actief"}
                 onClick={() => setModus("spreekkamer")}
               >
-                Gesprek in de ruimte
+                Gesprek op locatie
               </button>
               <button
                 className={videocall ? "modusknop actief" : "modusknop"}

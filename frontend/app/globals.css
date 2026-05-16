@@ -26,9 +26,15 @@ body {
 .kopbalk {
   display: flex;
   align-items: center;
+  gap: 0.9rem;
   padding: 0.9rem 2rem;
   background: #0a0c28;
   border-bottom: 1px solid #2c2f63;
+}
+
+.merk-logo {
+  height: 2.6rem;
+  width: auto;
 }
 
 .merk {
