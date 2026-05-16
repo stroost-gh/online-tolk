@@ -40,12 +40,17 @@ export function KoppelOverlay({
       <div className="overlay-paneel">
         <h2>Tweede scherm koppelen</h2>
         {qr && <img className="qr" src={qr} alt="QR-code" />}
-        <div className="koppelcode-blok">
-          <span className="koppelcode-label">Koppelcode</span>
-          <span className="koppelcode">
-            {koppelcode ? formatteerCode(koppelcode) : "..."}
-          </span>
-        </div>
+        {koppelcode ? (
+          <div className="koppelcode-blok">
+            <span className="koppelcode-label">Koppelcode</span>
+            <span className="koppelcode">{formatteerCode(koppelcode)}</span>
+          </div>
+        ) : (
+          <p className="melding">
+            Scan de QR-code op het tweede scherm. De pincode verschijnt zodra u
+            het gesprek start.
+          </p>
+        )}
         <p className="overlay-url">{adres}</p>
         {lokaal && (
           <p className="melding melding-fout">

@@ -251,13 +251,24 @@ export default function TolkScherm() {
               <p className="melding melding-fout">{foutmelding}</p>
             )}
             <div className="paneel-voet">
-              <span className="melding">Meekijken op dit apparaat?</span>
-              <a className="knop knop-secundair knop-klein" href="/scherm">
-                Tweede scherm openen
-              </a>
+              <span className="melding">Een tweede scherm laten meekijken?</span>
+              <button
+                className="knop knop-secundair knop-klein"
+                onClick={() => setKoppelOpen(true)}
+              >
+                Tweede scherm koppelen
+              </button>
             </div>
           </div>
         </main>
+        {koppelOpen && (
+          <KoppelOverlay
+            taalA={taalA}
+            taalB={taalB}
+            koppelcode={koppelcode}
+            opSluiten={() => setKoppelOpen(false)}
+          />
+        )}
       </div>
     );
   }
