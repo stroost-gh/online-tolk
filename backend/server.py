@@ -25,6 +25,7 @@ krijgt een koppelcode; extra schermen moeten die code opgeven.
 
 import asyncio
 import json
+import math
 import random
 
 import numpy as np
@@ -87,8 +88,11 @@ async def stuur_ondertitel(bron: str, nummer: int, audio: np.ndarray, definitief
     tekst, taal = await asyncio.to_thread(
         transcriptie.verwerk, audio, toegestaan, geforceerd
     )
+    duur = len(audio) / SAMPLE_RATE
     if not tekst:
+        print(f"[{bron}] geen tekst herkend uit {duur:.1f}s audio")
         return
+    print(f"[{bron}] herkend ({taal}, {duur:.1f}s): {tekst}")
 
     if sessie["modus"] == "videocall":
         spreker = bron
@@ -115,6 +119,7 @@ async def stuur_ondertitel(bron: str, nummer: int, audio: np.ndarray, definitief
 async def behandel_verbinding(ws):
     verbindingen.add(ws)
     segmentatoren: dict[str, Segmentator] = {}
+    audiotellers: dict[str, int] = {}
     await stuur(ws, {"type": "status", "staat": "verbonden"})
     try:
         async for bericht in ws:
@@ -125,7 +130,16 @@ async def behandel_verbinding(ws):
                 if bron not in segmentatoren:
                     segmentatoren[bron] = Segmentator()
                 segmentator = segmentatoren[bron]
-                actie = segmentator.voeg_toe(pcm_naar_float(bericht[1:]))
+                monster = pcm_naar_float(bericht[1:])
+                aantal = audiotellers.get(bron, 0) + 1
+                audiotellers[bron] = aantal
+                if aantal == 1 or aantal % 100 == 0:
+                    rms = math.sqrt(float(np.mean(monster * monster))) if len(monster) else 0.0
+                    print(
+                        f"[{bron}] audioframe {aantal} ontvangen "
+                        f"({len(monster)} monsters, RMS {rms:.4f})"
+                    )
+                actie = segmentator.voeg_toe(monster)
                 if actie == "interim":
                     audio = segmentator.audio()
                     if audio is not None:
@@ -155,8 +169,13 @@ async def behandel_verbinding(ws):
                 sessie["koppelcode"] = f"{random.randint(0, 999999):06d}"
                 sessie["teller"] = {"A": 0, "B": 0}
                 segmentatoren.clear()
+                audiotellers.clear()
                 gemachtigd.clear()
                 gemachtigd.add(ws)
+                print(
+                    f"Gesprek gestart: {sessie['taalA']} <-> {sessie['taalB']} "
+                    f"(modus {sessie['modus']})"
+                )
                 await stuur(ws, {"type": "koppelcode", "code": sessie["koppelcode"]})
                 await stuur(ws, sessie_bericht())
             elif soort == "stop":
