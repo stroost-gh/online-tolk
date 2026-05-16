@@ -35,6 +35,7 @@ export async function tabbladStream(): Promise<MediaStream> {
 export class AudioOpname {
   private context: AudioContext | null = null;
   private node: AudioWorkletNode | null = null;
+  private stil: GainNode | null = null;
 
   constructor(
     private stream: MediaStream,
@@ -43,6 +44,9 @@ export class AudioOpname {
 
   async start(opChunk: (pcm: ArrayBuffer) => void) {
     this.context = new AudioContext({ sampleRate: SAMPLE_RATE });
+    if (this.context.state === "suspended") {
+      await this.context.resume();
+    }
     await this.context.audioWorklet.addModule("/pcm-worklet.js");
 
     const ingang = this.context.createMediaStreamSource(this.stream);
@@ -52,11 +56,21 @@ export class AudioOpname {
       opChunk(pakIn(bronByte, e.data as Float32Array));
     };
     ingang.connect(this.node);
+
+    // Het worklet moet een pad naar de audio-uitgang hebben, anders roept de
+    // browser process() niet aan en wordt er geen audio verzameld. Een
+    // versterking van 0 houdt het onhoorbaar.
+    this.stil = this.context.createGain();
+    this.stil.gain.value = 0;
+    this.node.connect(this.stil);
+    this.stil.connect(this.context.destination);
   }
 
   async stop() {
     this.node?.disconnect();
     this.node = null;
+    this.stil?.disconnect();
+    this.stil = null;
     this.stream.getTracks().forEach((t) => t.stop());
     await this.context?.close();
     this.context = null;
