@@ -4,16 +4,27 @@ Het model wordt eenmalig (bij de eerste keer) van Hugging Face gedownload en
 daarna lokaal gecachet; tijdens een gesprek gaat er niets naar het internet.
 """
 
+import os
+
 import numpy as np
 from faster_whisper import WhisperModel
 
-from config import WHISPER_COMPUTE, WHISPER_DEVICE, WHISPER_MODEL
+from config import (
+    WHISPER_COMPUTE,
+    WHISPER_CPU_THREADS,
+    WHISPER_DEVICE,
+    WHISPER_MODEL,
+)
 
 
 class Transcriptie:
     def __init__(self):
+        threads = WHISPER_CPU_THREADS or (os.cpu_count() or 4)
         self.model = WhisperModel(
-            WHISPER_MODEL, device=WHISPER_DEVICE, compute_type=WHISPER_COMPUTE
+            WHISPER_MODEL,
+            device=WHISPER_DEVICE,
+            compute_type=WHISPER_COMPUTE,
+            cpu_threads=threads,
         )
 
     def verwerk(
