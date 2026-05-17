@@ -31,7 +31,7 @@ import random
 import numpy as np
 import websockets
 
-from config import HOST, POORT
+from config import HOST, POORT, SAMPLE_RATE
 from segmentatie import Segmentator
 from transcriptie import Transcriptie
 from vertaling import Vertaling
