@@ -200,7 +200,16 @@ async def main():
     print("Vertaalmodel laden...")
     vertaler = Vertaling()
     print("Modellen geladen.")
-    async with websockets.serve(behandel_verbinding, HOST, POORT, max_size=None):
+    # ping_timeout uit: zware transcriptie/vertaling kan de event-loop tijdelijk
+    # bezet houden; anders verbreekt websockets de verbinding bij een gemiste ping.
+    async with websockets.serve(
+        behandel_verbinding,
+        HOST,
+        POORT,
+        max_size=None,
+        ping_interval=20,
+        ping_timeout=None,
+    ):
         print(f"Tolk-dienst luistert op poort {POORT}")
         await asyncio.Future()
 
