@@ -101,7 +101,15 @@ async def stuur_ondertitel(bron: str, nummer: int, audio: np.ndarray, definitief
     bron_taal = sessie["taalA"] if spreker == "A" else sessie["taalB"]
     doel_taal = sessie["taalB"] if spreker == "A" else sessie["taalA"]
 
-    vertaling = await asyncio.to_thread(vertaler.vertaal, tekst, bron_taal, doel_taal)
+    # Voorlopige (grijze) tekst niet vertalen: dat is wegwerptekst en de
+    # vertaling is het traagste deel. De definitieve regel krijgt wel een
+    # vertaling, zodra de spreker even pauzeert.
+    if definitief:
+        vertaling = await asyncio.to_thread(
+            vertaler.vertaal, tekst, bron_taal, doel_taal
+        )
+    else:
+        vertaling = ""
     await broadcast(
         {
             "type": "ondertitel",
@@ -120,6 +128,22 @@ async def behandel_verbinding(ws):
     verbindingen.add(ws)
     segmentatoren: dict[str, Segmentator] = {}
     audiotellers: dict[str, int] = {}
+    # Het inlezen van audio en het (trage) transcriberen/vertalen draaien
+    # gescheiden: de wachtrij wordt door een aparte taak leeggewerkt, zodat
+    # binnenkomende audio nooit hoeft te wachten en er niets gemist wordt.
+    wachtrij: asyncio.Queue = asyncio.Queue()
+
+    async def verwerker():
+        while True:
+            bron, nummer, audio, definitief = await wachtrij.get()
+            try:
+                await stuur_ondertitel(bron, nummer, audio, definitief)
+            except Exception as fout:
+                print("Fout bij verwerken segment:", fout)
+            finally:
+                wachtrij.task_done()
+
+    verwerker_taak = asyncio.create_task(verwerker())
     await stuur(ws, {"type": "status", "staat": "verbonden"})
     try:
         async for bericht in ws:
@@ -141,17 +165,20 @@ async def behandel_verbinding(ws):
                     )
                 actie = segmentator.voeg_toe(monster)
                 if actie == "interim":
-                    audio = segmentator.audio()
-                    if audio is not None:
-                        await stuur_ondertitel(
-                            bron, sessie["teller"][bron] + 1, audio, False
-                        )
+                    # Voorlopige tekst alleen tonen als de verwerker vrij is;
+                    # anders overslaan, want de definitieve regel volgt toch.
+                    if wachtrij.empty():
+                        audio = segmentator.audio()
+                        if audio is not None:
+                            wachtrij.put_nowait(
+                                (bron, sessie["teller"][bron] + 1, audio, False)
+                            )
                 elif actie == "definitief":
                     sessie["teller"][bron] += 1
                     audio = segmentator.neem_segment()
                     if audio is not None:
-                        await stuur_ondertitel(
-                            bron, sessie["teller"][bron], audio, True
+                        wachtrij.put_nowait(
+                            (bron, sessie["teller"][bron], audio, True)
                         )
                 continue
 
@@ -189,6 +216,7 @@ async def behandel_verbinding(ws):
                 else:
                     await stuur(ws, {"type": "koppel_fout"})
     finally:
+        verwerker_taak.cancel()
         verbindingen.discard(ws)
         gemachtigd.discard(ws)
 
